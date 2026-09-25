@@ -1,3 +1,6 @@
+USE OnlinestoreDB;
+GO
+
 -- Insert sample brands
 INSERT INTO Brands (BrandName) VALUES
 ('TechNova'),
