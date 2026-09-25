@@ -93,3 +93,51 @@ CREATE TABLE Products
         REFERENCES Categories(CategoryID)
 );
 GO
+
+CREATE TABLE Orders
+(
+    OrderID INT IDENTITY(1,1) PRIMARY KEY,
+
+    CustomerID INT NOT NULL,
+
+    OrderDate DATETIME2 NOT NULL
+        CONSTRAINT DF_Orders_OrderDate DEFAULT SYSDATETIME(),
+
+    Status NVARCHAR(50) NOT NULL
+        CONSTRAINT DF_Orders_Status DEFAULT 'Pending',
+
+    ShippingAddressID INT NOT NULL,
+
+    CONSTRAINT FK_Orders_Customers
+        FOREIGN KEY (CustomerID)
+        REFERENCES Customers(CustomerID),
+
+    CONSTRAINT FK_Orders_Addresses
+        FOREIGN KEY (ShippingAddressID)
+        REFERENCES Addresses(AddressesID)
+);
+GO
+
+CREATE TABLE OrderItems
+(
+    OrderItemID INT IDENTITY(1,1) PRIMARY KEY,
+
+    OrderID INT NOT NULL,
+
+    ProductID INT NOT NULL,
+
+    Quantity INT NOT NULL
+        CONSTRAINT CK_OrderItems_Quantity
+        CHECK (Quantity > 0),
+
+    UnitPrice DECIMAL(10,2) NOT NULL,
+
+    CONSTRAINT FK_OrderItems_Orders
+        FOREIGN KEY (OrderID)
+        REFERENCES Orders(OrderID),
+
+    CONSTRAINT FK_OrderItems_Products
+        FOREIGN KEY (ProductID)
+        REFERENCES Products(ProductID)
+);
+GO
